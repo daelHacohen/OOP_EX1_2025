@@ -7,8 +7,8 @@ import java.util.Objects;
 
 public class Main {
     /**
-     * The Main function to start the game.
-     * Don't make any changes here kakakakaka
+     * The Main function to start the game
+     * Don't make any changes here
      */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
