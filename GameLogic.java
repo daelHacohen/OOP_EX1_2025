@@ -1,6 +1,7 @@
 import java.util.List;
 
 public class GameLogic implements PlayableLogic{
+    private Disc[][] discsOnBoard = new Disc[8][8];
     @Override
     public boolean locate_disc(Position a, Disc disc) {
         return false;
@@ -8,11 +9,14 @@ public class GameLogic implements PlayableLogic{
 
     @Override
     public Disc getDiscAtPosition(Position position) {
+        if (discsOnBoard[position.getRow()][position.getCol()]==null)
         return null;
+        else return discsOnBoard[position.getRow()][position.getCol()];
     }
 
     @Override
     public int getBoardSize() {
+
         return 0;
     }
 
