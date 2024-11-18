@@ -1,8 +1,9 @@
 public class Move {
     Position p;
-    public Position position() { return }
+    Disc disc;
+    public Position position() { return p; }
 
-    public Disc disc() { return  }
+    public Disc disc() { return disc; }
    public void Undo(){  }
 
 }

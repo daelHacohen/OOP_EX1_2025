@@ -9,9 +9,9 @@ public class GameLogic implements PlayableLogic{
 
     @Override
     public Disc getDiscAtPosition(Position position) {
-        if (discsOnBoard[position.getRow()][position.getCol()]==null)
+        if (discsOnBoard[position.row()][position.col()]==null)
         return null;
-        else return discsOnBoard[position.getRow()][position.getCol()];
+        else return discsOnBoard[position.row()][position.col()];
     }
 
     @Override
