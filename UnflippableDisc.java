@@ -1,5 +1,10 @@
 public class UnflippableDisc implements Disc{
     private Player owner;
+
+    public UnflippableDisc(Player owner) {
+        this.owner = owner;
+    }
+
     @Override
     public Player getOwner() {
         return owner;

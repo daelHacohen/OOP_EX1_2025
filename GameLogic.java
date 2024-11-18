@@ -1,7 +1,10 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameLogic implements PlayableLogic{
     private Disc[][] discsOnBoard = new Disc[8][8];
+   private Player player1;
+    private Player player2;
     @Override
     public boolean locate_disc(Position a, Disc disc) {
         return false;
@@ -17,12 +20,14 @@ public class GameLogic implements PlayableLogic{
     @Override
     public int getBoardSize() {
 
-        return 0;
+        return discsOnBoard.length;
     }
 
     @Override
     public List<Position> ValidMoves() {
-        return null;
+        List<Position>possiblePositions =new ArrayList<>();
+
+        return possiblePositions;
     }
 
     @Override
@@ -32,16 +37,18 @@ public class GameLogic implements PlayableLogic{
 
     @Override
     public Player getFirstPlayer() {
-        return null;
+        return player1;
     }
 
     @Override
     public Player getSecondPlayer() {
-        return null;
+        return player2;
     }
 
     @Override
     public void setPlayers(Player player1, Player player2) {
+        this.player1 = player1;
+        this.player2 = player2;
 
     }
 
