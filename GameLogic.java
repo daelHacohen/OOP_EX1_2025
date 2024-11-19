@@ -6,7 +6,14 @@ public class GameLogic implements PlayableLogic{
    private Player player1;
     private Player player2;
     @Override
-    public boolean locate_disc(Position a, Disc disc) {
+    public boolean locate_disc(Position a, Disc disc) {//ניסיתי לעשות  את הפונקציה לא יודע אם זה עבד.
+        List<Position>positionList = ValidMoves();
+        for (int i = 0; i < positionList.size(); i++) {
+            if (positionList.get(i).col()==a.col()&&positionList.get(i).row()==a.row()){
+                discsOnBoard[a.row()][a.col()]=disc;
+                return true;
+                }
+        }
         return false;
     }
 
