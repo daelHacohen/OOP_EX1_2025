@@ -36,20 +36,15 @@ public class GameLogic implements PlayableLogic{
     }
 
     @Override
-    public Player getFirstPlayer() {
-        return player1;
-    }
+    public Player getFirstPlayer() {return player1;}
 
     @Override
-    public Player getSecondPlayer() {
-        return player2;
-    }
+    public Player getSecondPlayer() {return player2;}
 
     @Override
     public void setPlayers(Player player1, Player player2) {
         this.player1 = player1;
         this.player2 = player2;
-
     }
 
     @Override
