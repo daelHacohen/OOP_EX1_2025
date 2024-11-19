@@ -1,4 +1,4 @@
-public class Move {
+public class Move {//צריך לממש את הפונקציות כאן ( עוד לא ממומש)
     Position p;
     Disc disc;
     public Position position() { return p; }

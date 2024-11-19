@@ -72,8 +72,6 @@ public class GameLogic implements PlayableLogic{
         discsOnBoard[4][4]=d2;
         discsOnBoard[3][4]=d3;
         discsOnBoard[4][3]=d4;
-
-
     }
 
     @Override
