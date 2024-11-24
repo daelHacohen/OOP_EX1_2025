@@ -8,18 +8,23 @@ public class GameLogic implements PlayableLogic{
     private Player player2;
    private boolean isFirstPlayerTurn;
 
+    public GameLogic() {
+        this.isFirstPlayerTurn = true;
+    }
 
     @Override
     public boolean locate_disc(Position a, Disc disc) {//ניסיתי לעשות  את הפונקציה לא יודע אם זה עבד.
         List<Position>positionList = ValidMoves();
+
         for (int i = 0; i < positionList.size(); i++) {
             if (positionList.get(i).col()==a.col()&&positionList.get(i).row()==a.row()){
                 discsOnBoard[a.row()][a.col()]=disc;
-                break;
+                isFirstPlayerTurn=!isFirstPlayerTurn;
+                return true;
                 }
         }
-        isFirstPlayerTurn=!isFirstPlayerTurn;
-        return true;
+
+        return false;
     }
 
     @Override
@@ -138,7 +143,7 @@ public boolean isvalidMove(Position position){
 
     @Override
     public boolean isFirstPlayerTurn() {
-        return false;
+        return isFirstPlayerTurn;
     }
 
     @Override
