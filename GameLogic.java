@@ -69,12 +69,13 @@ public class GameLogic implements PlayableLogic{
         ArrayList<String>directions =new ArrayList<>();
         for (int i = p.row()-1; i <p.row()+3 ; i++) {
             for (int j = p.col()-1; j <p.col()+3 ; j++) {
-                if (inTheBoard(new Position(i,j))){
-                    if(discsOnBoard[i][j]!=null&&isFirstPlayerTurn()&&getDiscAtPosition(new Position(i,j)).getOwner()==player2){
-                    directions.add(direction(p,new Position(i,j)));}
-                }else if (inTheBoard(new Position(i,j))){
-                    if(discsOnBoard[i][j]!=null&&isFirstPlayerTurn()==false&&getDiscAtPosition(new Position(i,j)).getOwner()==player1){
-                        directions.add(direction(p,new Position(i,j)));
+                Position neighbor = new Position(i, j);
+                if (inTheBoard(new Position(i,j))&&discsOnBoard[i][j]!=null){
+                    Disc disc = discsOnBoard[i][j];
+                    if ((isFirstPlayerTurn && disc.getOwner() == player2) ||
+                            (!isFirstPlayerTurn && disc.getOwner() == player1)) {
+                        String dir = direction(p, neighbor);
+                        if (dir != null) directions.add(dir);
                     }
                 }
             }
@@ -97,13 +98,19 @@ public boolean isvalidMove(Position position){
         if (inTheBoard(position)&& discsOnBoard[position.row()][position.col()]==null){
          ArrayList<String>directions =getDirections(position);
          if (directions.isEmpty())return false;
-            for (int i = 0; i < directions.size(); i++) {
-                Position temp = new Position(position.row(),position.col());
+            for (String direction : directions) {
+                Position temp = position;
                 for (int j = 0; j < 8; j++) {
-                   temp=GoInDirection(temp,directions.get(i));
-                   if (!inTheBoard(temp)) {break;}
-                    if (discsOnBoard[temp.row()][temp.col()] == null) {break;}
-                   if (discsOnBoard[temp.row()][temp.col()].getOwner()==getDiscAtPosition(position).getOwner())return true;
+                    temp = GoInDirection(temp, direction);
+                    if (!inTheBoard(temp)) {
+                        break;
+                    }
+                    Disc tempDisc = discsOnBoard [temp.row()][temp.col()];
+                    if (tempDisc == null) {
+                        break;
+                    }
+                    if (tempDisc.getOwner() == (isFirstPlayerTurn ? player1 : player2))
+                        return true;
                 }
             }
         }
@@ -166,6 +173,8 @@ public boolean isvalidMove(Position position){
         discsOnBoard[4][4]=d2;
         discsOnBoard[3][4]=d3;
         discsOnBoard[4][3]=d4;
+
+        isFirstPlayerTurn=true;
     }
 
     @Override
