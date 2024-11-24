@@ -3,6 +3,7 @@ import java.util.List;
 
 public class GameLogic implements PlayableLogic{
     private final Disc[][] discsOnBoard = new Disc[8][8];
+
    private Player player1;
     private Player player2;
     @Override
@@ -29,6 +30,26 @@ public class GameLogic implements PlayableLogic{
 
         return discsOnBoard.length;
     }
+    public boolean inTheBoard(Position p){
+        if (p.row()>=0&&p.row()<=8){
+            if (p.col()<=8&&p.col()>=0){
+                return true;
+            }
+        }
+        return false;
+    }
+public boolean validMove(Move move){
+        if (inTheBoard(move.position())&& discsOnBoard[move.position().row()][move.position().col()]==null){
+            for (int i = move.position().row()-1; i <move.position().row()+3 ; i++) {
+                for (int j = move.position().col()-1; j <move.position().col()+3 ; j++) {
+                    if ()
+
+                }
+
+            }
+
+        }
+}
 
     @Override
     public List<Position> ValidMoves() {
