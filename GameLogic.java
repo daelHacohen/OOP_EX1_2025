@@ -38,6 +38,41 @@ public class GameLogic implements PlayableLogic{
         }
         return false;
     }
+    public String direction (Position current, Position next){
+        if (inTheBoard(current)&&inTheBoard(next)){
+            if (next.row()==current.row()-1){
+                if (next.col()==current.col()-1)return "upLeft";
+                else if (next.col() == current.col()) return "up";
+                else if (next.col() == current.col() + 1) return "upRight";
+            } else if (next.row() == current.row()) {
+                if (next.col()==current.col()-1)return "left";
+                else if (next.col() == current.col() + 1) return "right";
+            } else if (next.row()==current.row()+1) {
+                if (next.col()==current.col()-1)return "downLeft";
+                else if (next.col()==current.col())return "down";
+                else if (next.col()==current.col()+1)return "downRight";
+
+            }
+        }
+    }
+    public ArrayList<String> getDirections(Position p){
+        ArrayList<String>directions =new ArrayList<>();
+        for (int i = p.row()-1; i <p.row()+3 ; i++) {
+            for (int j = p.col()-1; j <p.col()+3 ; j++) {
+                if (isFirstPlayerTurn()&&discsOnBoard[i][j].getOwner()==player2){
+                    directions.add(direction(p,new Position(i,j)));
+                }else if (isFirstPlayerTurn()==false&&discsOnBoard[i][j].getOwner()==player1){
+                    directions.add(direction(p,new Position(i,j)));
+                }
+
+            }
+
+        }
+
+    }
+    public Position GoInDirection(Position p,String str){
+
+    }
 public boolean validMove(Move move){
         if (inTheBoard(move.position())&& discsOnBoard[move.position().row()][move.position().col()]==null){
             for (int i = move.position().row()-1; i <move.position().row()+3 ; i++) {
