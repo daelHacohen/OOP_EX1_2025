@@ -6,16 +6,20 @@ public class GameLogic implements PlayableLogic{
 
    private Player player1;
     private Player player2;
+   private boolean isFirstPlayerTurn;
+
+
     @Override
     public boolean locate_disc(Position a, Disc disc) {//ניסיתי לעשות  את הפונקציה לא יודע אם זה עבד.
         List<Position>positionList = ValidMoves();
         for (int i = 0; i < positionList.size(); i++) {
             if (positionList.get(i).col()==a.col()&&positionList.get(i).row()==a.row()){
                 discsOnBoard[a.row()][a.col()]=disc;
-                return true;
+                break;
                 }
         }
-        return false;
+        isFirstPlayerTurn=!isFirstPlayerTurn;
+        return true;
     }
 
     @Override
@@ -31,8 +35,8 @@ public class GameLogic implements PlayableLogic{
         return discsOnBoard.length;
     }
     public boolean inTheBoard(Position p){
-        if (p.row()>=0&&p.row()<=8){
-            if (p.col()<=8&&p.col()>=0){
+        if (p.row()>=0&&p.row()<8){
+            if (p.col()<8&&p.col()>=0){
                 return true;
             }
         }
@@ -54,42 +58,64 @@ public class GameLogic implements PlayableLogic{
 
             }
         }
+        return null;
     }
     public ArrayList<String> getDirections(Position p){
         ArrayList<String>directions =new ArrayList<>();
         for (int i = p.row()-1; i <p.row()+3 ; i++) {
             for (int j = p.col()-1; j <p.col()+3 ; j++) {
-                if (isFirstPlayerTurn()&&discsOnBoard[i][j].getOwner()==player2){
-                    directions.add(direction(p,new Position(i,j)));
-                }else if (isFirstPlayerTurn()==false&&discsOnBoard[i][j].getOwner()==player1){
-                    directions.add(direction(p,new Position(i,j)));
+                if (inTheBoard(new Position(i,j))){
+                    if(discsOnBoard[i][j]!=null&&isFirstPlayerTurn()&&getDiscAtPosition(new Position(i,j)).getOwner()==player2){
+                    directions.add(direction(p,new Position(i,j)));}
+                }else if (inTheBoard(new Position(i,j))){
+                    if(discsOnBoard[i][j]!=null&&isFirstPlayerTurn()==false&&getDiscAtPosition(new Position(i,j)).getOwner()==player1){
+                        directions.add(direction(p,new Position(i,j)));
+                    }
                 }
-
             }
-
         }
+        return directions;
 
     }
     public Position GoInDirection(Position p,String str){
-
+        if (str.equals("upLeft"))return new Position(p.row()-1,p.col()-1);
+        else if (str.equals("up"))return new Position(p.row()-1,p.col());
+        else if (str.equals("upRight"))return new Position(p.row()-1,p.col()+1);
+        else if (str.equals("left"))return new Position(p.row(),p.col()-1);
+        else if (str.equals("right"))return new Position(p.row(),p.col()+1);
+        else if (str.equals("downLeft"))return new Position(p.row()+1,p.col()-1);
+        else if (str.equals("down"))return new Position(p.row()+1,p.col());
+        else if (str.equals("downRight"))return new Position(p.row()+1,p.col()+1);
+        return null;
     }
-public boolean validMove(Move move){
-        if (inTheBoard(move.position())&& discsOnBoard[move.position().row()][move.position().col()]==null){
-            for (int i = move.position().row()-1; i <move.position().row()+3 ; i++) {
-                for (int j = move.position().col()-1; j <move.position().col()+3 ; j++) {
-                    if ()
-
+public boolean isvalidMove(Position position){
+        if (inTheBoard(position)&& discsOnBoard[position.row()][position.col()]==null){
+         ArrayList<String>directions =getDirections(position);
+         if (directions.isEmpty())return false;
+            for (int i = 0; i < directions.size(); i++) {
+                Position temp = new Position(position.row(),position.col());
+                for (int j = 0; j < 8; j++) {
+                   temp=GoInDirection(temp,directions.get(i));
+                   if (!inTheBoard(temp)) {break;}
+                    if (discsOnBoard[temp.row()][temp.col()] == null) {break;}
+                   if (discsOnBoard[temp.row()][temp.col()].getOwner()==getDiscAtPosition(position).getOwner())return true;
                 }
-
             }
-
         }
+        return false;
 }
 
     @Override
     public List<Position> ValidMoves() {
         List<Position>possiblePositions =new ArrayList<>();
-
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                Position p =new Position(i,j);
+                if (isvalidMove(p)){
+                    possiblePositions.add(p);
+                }
+            }
+        }
         return possiblePositions;
     }
 
