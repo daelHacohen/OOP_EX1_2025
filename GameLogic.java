@@ -134,41 +134,8 @@ public boolean isvalidMove(Position position){
         return possiblePositions;
     }
 
-//    @Override
-//    public int countFlips(Position a) {
-//    int counter = 0;
-//    int allCounters=0;
-//        if (inTheBoard(a)&&isvalidMove(a)){
-//            if (isvalidMove(a)){
-//                ArrayList<String> directions= getDirections(a);
-//                for (String direction : directions) {
-//                    Position temp = a;
-//                    for (int j = 0; j < 8; j++) {
-//                        temp = GoInDirection(temp, direction);
-//                        if (!inTheBoard(temp)) {
-//                            counter = 0;
-//                            break;
-//                        }
-//                        Disc tempDisc = discsOnBoard[temp.row()][temp.col()];
-//                        if (tempDisc == null) {
-//                            counter = 0;
-//                            break;
-//                        }
-//                        if (tempDisc.getOwner() != (isFirstPlayerTurn ? player1 : player2)) {
-//                            counter++;
-//                        }
-//                        if (tempDisc.getOwner() == (isFirstPlayerTurn ? player1 : player2)){
-//                            allCounters =allCounters+counter;
-//                            break;
-//                        }
-//
-//                    }
-//                 }
-//            }
-//        }
-//        return allCounters;
-//    }
-public int countFlips(Position a) {
+    @Override
+    public int countFlips(Position a) {
         int counter =0;
     ArrayList<String> dir =onlyGoodDirection(a);
     for (String direction : dir) {
