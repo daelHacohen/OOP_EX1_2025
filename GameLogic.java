@@ -13,13 +13,14 @@ public class GameLogic implements PlayableLogic{
     }
 
     @Override
-    public boolean locate_disc(Position a, Disc disc) {//ניסיתי לעשות  את הפונקציה לא יודע אם זה עבד.
+    public boolean locate_disc(Position a, Disc disc) {
         List<Position>positionList = ValidMoves();
 
         for (int i = 0; i < positionList.size(); i++) {
             if (positionList.get(i).col()==a.col()&&positionList.get(i).row()==a.row()){
                 discsOnBoard[a.row()][a.col()]=disc;
                 isFirstPlayerTurn=!isFirstPlayerTurn;
+                flips(a);
                 return true;
                 }
         }
@@ -133,8 +134,104 @@ public boolean isvalidMove(Position position){
 
     @Override
     public int countFlips(Position a) {
-        return 0;
+
+    int counter = 0;
+    int allCounters=0;
+        if (inTheBoard(a)&&isvalidMove(a)){
+            if (isvalidMove(a)){
+                ArrayList<String> directions= getDirections(a);
+                for (String direction : directions) {
+                    Position temp = a;
+                    for (int j = 0; j < 8; j++) {
+                        temp = GoInDirection(temp, direction);
+                        if (!inTheBoard(temp)) {
+                            counter = 0;
+                            break;
+                        }
+                        Disc tempDisc = discsOnBoard[temp.row()][temp.col()];
+                        if (tempDisc == null) {
+                            counter = 0;
+                            break;
+                        }
+                        if (tempDisc.getOwner() != (isFirstPlayerTurn ? player1 : player2)) {
+                            counter++;
+                        }
+                        if (tempDisc.getOwner() == (isFirstPlayerTurn ? player1 : player2)){
+                            allCounters =allCounters+counter;
+                            break;
+                        }
+
+                    }
+                 }
+            }
+        }
+
+        return allCounters;
     }
+    public ArrayList<String> onlyGoodDirection(Position a) {
+       ArrayList<String>newDirections = new ArrayList<>();
+        if (inTheBoard(a)&&isvalidMove(a)){
+            if (isvalidMove(a)){
+                ArrayList<String> directions= getDirections(a);
+                for (String direction : directions) {
+                    Position temp = a;
+                    newDirections.add(direction);
+                    for (int j = 0; j < 8; j++) {
+                        temp = GoInDirection(temp, direction);
+                        if (!inTheBoard(temp)) {
+                            newDirections.removeLast();
+                            break;
+                        }
+                        Disc tempDisc = discsOnBoard[temp.row()][temp.col()];
+                        if (tempDisc == null) {
+                            newDirections.removeLast();
+                            break;
+                        }
+                        if (tempDisc.getOwner() == (isFirstPlayerTurn ? player1 : player2)){
+                            break;
+                        }
+
+                    }
+                }
+            }
+        }
+
+        return newDirections;
+    }
+
+    public void flips (Position a){
+        Player currentPlayer;
+        if (isFirstPlayerTurn) {
+            currentPlayer = player1;
+        } else {
+            currentPlayer = player2;
+        }
+        ArrayList<String> dir =onlyGoodDirection(a);
+        for (String direction : dir) {
+            Position temp = a;
+            for (int j = 0; j < 8; j++) {
+                temp = GoInDirection(temp, direction);
+                if (!inTheBoard(temp)) {
+                    break;
+                }
+                Disc tempDisc = discsOnBoard[temp.row()][temp.col()];
+                if (tempDisc == null) {
+                    break;
+                }
+                if (tempDisc.getOwner() == (isFirstPlayerTurn ? player1 : player2)){
+                    break;
+                }
+                if (tempDisc.getOwner() != (isFirstPlayerTurn ? player1 : player2)){
+                   Disc newDisc =getDiscAtPosition(temp);
+                   newDisc.setOwner(currentPlayer);
+                   discsOnBoard[temp.row()][temp.col()]=newDisc;
+                }
+
+            }
+        }
+    }
+
+
 
     @Override
     public Player getFirstPlayer() {return player1;}
