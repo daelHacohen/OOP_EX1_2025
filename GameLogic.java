@@ -211,7 +211,7 @@ public boolean isvalidMove(Position position){
             Position temp = a;
             for (int j = 0; j < 8; j++) {
                 temp = GoInDirection(temp, direction);
-                if (!inTheBoard(temp)) {
+                  if (!inTheBoard(temp)) {
                     break;
                 }
                 Disc tempDisc = discsOnBoard[temp.row()][temp.col()];
