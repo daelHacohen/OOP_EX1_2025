@@ -240,7 +240,25 @@ return counter;
     @Override
     public boolean isGameFinished() {
         List<Position>validMoves = ValidMoves();
-        if (validMoves.isEmpty())return true;
+        int counterP1 =0;
+        int counterP2 =0;
+        if (validMoves.isEmpty()){
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+
+                  if (getDiscAtPosition(new Position(i,j))!=null&&getDiscAtPosition(new Position(i,j)).getOwner()==player1){
+                      counterP1++;
+                  }else counterP2++;
+
+                }
+            }
+            if (counterP1>counterP2){
+                player1.addWin();
+            }else if (counterP1<counterP2){
+                player2.addWin();
+            }
+            return true;
+        }
 
         return false;
     }
