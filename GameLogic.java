@@ -7,7 +7,6 @@ public class GameLogic implements PlayableLogic{
    private Player player1;
     private Player player2;
    private boolean isFirstPlayerTurn;
-   private int flipCounter;
 
     public GameLogic() {
         this.isFirstPlayerTurn = true;
@@ -240,6 +239,9 @@ return counter;
 
     @Override
     public boolean isGameFinished() {
+        List<Position>validMoves = ValidMoves();
+        if (validMoves.isEmpty())return true;
+
         return false;
     }
 
