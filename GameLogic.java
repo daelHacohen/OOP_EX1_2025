@@ -134,7 +134,7 @@ public boolean isvalidMove(Position position){
     }
 
     @Override
-    public int countFlips(Position a) {
+    public int countFlips(Position a){
         int counter =0;
     ArrayList<String> dir =onlyGoodDirection(a);
     for (String direction : dir) {
