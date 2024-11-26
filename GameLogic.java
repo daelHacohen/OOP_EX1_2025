@@ -188,64 +188,39 @@ return counter;
     return newDirections;
     }
 
-    public void flips(Position a){
-        Player currentPlayer;
-        if (isFirstPlayerTurn) {
-            currentPlayer = player1;
-        } else {
-            currentPlayer = player2;
-        }
-        ArrayList<String> dir =onlyGoodDirection(a);
+    public void flips(Position a) {
+        Player currentPlayer = isFirstPlayerTurn ? player1 : player2;
+        ArrayList<String> dir = onlyGoodDirection(a);
+
         for (String direction : dir) {
             Position temp = a;
             for (int j = 0; j < 8; j++) {
                 temp = GoInDirection(temp, direction);
-                  if (!inTheBoard(temp)) {
-                    break;
-                }
+                if (!inTheBoard(temp)) break;
+
                 Disc tempDisc = discsOnBoard[temp.row()][temp.col()];
-                if (tempDisc == null) {
-                    break;
-                }
-                if (tempDisc.getOwner() == (isFirstPlayerTurn ? player1 : player2)){
-                    break;
-                }
-                if (tempDisc.getOwner() != (isFirstPlayerTurn ? player1 : player2)){
-                    if (Objects.equals(tempDisc.getType(), "⬤")){
+                if (tempDisc == null) break;
+                if (tempDisc.getOwner() == currentPlayer) break;
+                if (Objects.equals(tempDisc.getType(), "⬤")) {
                     tempDisc.setOwner(currentPlayer);
                     discsOnBoard[temp.row()][temp.col()] = tempDisc;
-                    }
-                    else if (Objects.equals(tempDisc.getType(), "⭕")){
-                        continue;
-                    } else if (Objects.equals(tempDisc.getType(), "💣")) {
-//                        flipBomb(temp);
-                        tempDisc.setOwner(currentPlayer);
-                        discsOnBoard[temp.row()][temp.col()] = tempDisc;
-                        Position temp2=GoInDirection(temp, direction);
-                        //System.out.println("temp2 row: "+temp2.row()+", col: "+temp2.col());
-                        for (int i = temp.row()-1; i < temp.row()+2; i++) {
-                            for (int k = temp.col()-1 ;k < temp.col()+2; k++) {
-                                Position p =new Position(i,k);
-                                if (!inTheBoard(p)||discsOnBoard[i][k]==null||getDiscAtPosition(p).getOwner()==currentPlayer||temp2.row()==i&&temp2.col()==k){
-                                    continue;
-                                }else if ()getDiscAtPosition(p).setOwner(currentPlayer);
-                            }
-                        }
-                    }
-
                 }
-
+                else if (Objects.equals(tempDisc.getType(), "💣")) {
+                    tempDisc.setOwner(currentPlayer);
+                    discsOnBoard[temp.row()][temp.col()] = tempDisc;
+                    flipBomb(temp);
+                }
+                else if (Objects.equals(tempDisc.getType(), "⭕")) {
+                    continue;
+                }
             }
         }
     }
-    public void flipBomb(Position a){
-        ArrayList<String>dirs =new ArrayList<>();
-        Player currentPlayer;
-        if (isFirstPlayerTurn) {
-            currentPlayer = player1;
-        } else {
-            currentPlayer = player2;
-        }
+
+    public void flipBomb(Position a) {
+        Player currentPlayer = isFirstPlayerTurn ? player1 : player2;
+
+        ArrayList<String> dirs = new ArrayList<>();
         dirs.add("upRight");
         dirs.add("up");
         dirs.add("upLeft");
@@ -254,22 +229,113 @@ return counter;
         dirs.add("down");
         dirs.add("downRight");
         dirs.add("right");
-        Position temp =a;
-        for (int i = 0; i < 8; i++) {
-            temp = GoInDirection(temp,dirs.get(i));
-            if (inTheBoard(temp)&&getDiscAtPosition(temp)!=null){
-                if (getDiscAtPosition(temp).getOwner()!=currentPlayer){
-                    if (Objects.equals(getDiscAtPosition(temp).getType(), "⬤"))getDiscAtPosition(temp).setOwner(currentPlayer);
-                    else if (Objects.equals(getDiscAtPosition(temp).getType(), "⭕"))continue;
-                    else if (Objects.equals(getDiscAtPosition(temp).getType(), "💣")) {
-                        getDiscAtPosition(temp).setOwner(currentPlayer);
-//                        flipBomb(temp);
+
+        for (String direction : dirs) {
+            Position temp = a;
+            for (int j = 0; j < 1; j++) {
+                temp = GoInDirection(temp, direction);
+
+                if (!inTheBoard(temp)) break;
+                Disc tempDisc = discsOnBoard[temp.row()][temp.col()];
+                if (tempDisc == null) continue;
+
+                if (tempDisc.getOwner() != currentPlayer) {
+                    if (Objects.equals(tempDisc.getType(), "⬤")) {
+                        tempDisc.setOwner(currentPlayer);
+                        discsOnBoard[temp.row()][temp.col()] = tempDisc;
+                    }
+                    else if (Objects.equals(tempDisc.getType(), "💣")) {
+                        tempDisc.setOwner(currentPlayer);
+                        discsOnBoard[temp.row()][temp.col()] = tempDisc;
+                        flipBomb(temp);
                     }
                 }
             }
         }
-
     }
+
+//    public void flips(Position a){
+//        Player currentPlayer;
+//        if (isFirstPlayerTurn) {
+//            currentPlayer = player1;
+//        } else {
+//            currentPlayer = player2;
+//        }
+//        ArrayList<String> dir =onlyGoodDirection(a);
+//        for (String direction : dir) {
+//            Position temp = a;
+//            for (int j = 0; j < 8; j++) {
+//                temp = GoInDirection(temp, direction);
+//                  if (!inTheBoard(temp)) {
+//                    break;
+//                }
+//                Disc tempDisc = discsOnBoard[temp.row()][temp.col()];
+//                if (tempDisc == null) {
+//                    break;
+//                }
+//                if (tempDisc.getOwner() == (isFirstPlayerTurn ? player1 : player2)){
+//                    break;
+//                }
+//                if (tempDisc.getOwner() != (isFirstPlayerTurn ? player1 : player2)){
+//                    if (Objects.equals(tempDisc.getType(), "⬤")){
+//                    tempDisc.setOwner(currentPlayer);
+//                    discsOnBoard[temp.row()][temp.col()] = tempDisc;
+//                    }
+//                    else if (Objects.equals(tempDisc.getType(), "⭕")){
+//                        continue;
+//                    } else if (Objects.equals(tempDisc.getType(), "💣")) {
+////                        flipBomb(temp);
+//                        tempDisc.setOwner(currentPlayer);
+//                        discsOnBoard[temp.row()][temp.col()] = tempDisc;
+//                        Position temp2=GoInDirection(temp, direction);
+//                        //System.out.println("temp2 row: "+temp2.row()+", col: "+temp2.col());
+//                        for (int i = temp.row()-1; i < temp.row()+2; i++) {
+//                            for (int k = temp.col()-1 ;k < temp.col()+2; k++) {
+//                                Position p =new Position(i,k);
+//                                if (!inTheBoard(p)||discsOnBoard[i][k]==null||getDiscAtPosition(p).getOwner()==currentPlayer||temp2.row()==i&&temp2.col()==k){
+//                                    continue;
+//                                }else if ()getDiscAtPosition(p).setOwner(currentPlayer);
+//                            }
+//                        }
+//                    }
+//
+//                }
+//
+//            }
+//        }
+//    }
+//    public void flipBomb(Position a){
+//        ArrayList<String>dirs =new ArrayList<>();
+//        Player currentPlayer;
+//        if (isFirstPlayerTurn) {
+//            currentPlayer = player1;
+//        } else {
+//            currentPlayer = player2;
+//        }
+//        dirs.add("upRight");
+//        dirs.add("up");
+//        dirs.add("upLeft");
+//        dirs.add("left");
+//        dirs.add("downLeft");
+//        dirs.add("down");
+//        dirs.add("downRight");
+//        dirs.add("right");
+//        Position temp =a;
+//        for (int i = 0; i < 8; i++) {
+//            temp = GoInDirection(temp,dirs.get(i));
+//            if (inTheBoard(temp)&&getDiscAtPosition(temp)!=null){
+//                if (getDiscAtPosition(temp).getOwner()!=currentPlayer){
+//                    if (Objects.equals(getDiscAtPosition(temp).getType(), "⬤"))getDiscAtPosition(temp).setOwner(currentPlayer);
+//                    else if (Objects.equals(getDiscAtPosition(temp).getType(), "⭕"))continue;
+//                    else if (Objects.equals(getDiscAtPosition(temp).getType(), "💣")) {
+//                        getDiscAtPosition(temp).setOwner(currentPlayer);
+////                        flipBomb(temp);
+//                    }
+//                }
+//            }
+//        }
+//
+//    }
 
 
 
