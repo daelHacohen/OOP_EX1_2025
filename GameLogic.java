@@ -58,6 +58,7 @@ public class GameLogic implements PlayableLogic{
                 else if (next.col() == current.col() + 1) return "upRight";
             } else if (next.row() == current.row()) {
                 if (next.col()==current.col()-1)return "left";
+                if (next.col()==current.col())return "mid";
                 else if (next.col() == current.col() + 1) return "right";
             } else if (next.row()==current.row()+1) {
                 if (next.col()==current.col()-1)return "downLeft";
@@ -220,12 +221,13 @@ return counter;
                         tempDisc.setOwner(currentPlayer);
                         discsOnBoard[temp.row()][temp.col()] = tempDisc;
                         Position temp2=GoInDirection(temp, direction);
-                        System.out.println("temp2 row: "+temp2.row()+", col: "+temp2.col());
+                        //System.out.println("temp2 row: "+temp2.row()+", col: "+temp2.col());
                         for (int i = temp.row()-1; i < temp.row()+2; i++) {
                             for (int k = temp.col()-1 ;k < temp.col()+2; k++) {
-                                if (!inTheBoard(new Position(i,k))||discsOnBoard[i][k]==null||getDiscAtPosition(new Position(i,k)).getOwner()==currentPlayer||temp2.row()==i&&temp2.col()==k){
+                                Position p =new Position(i,k);
+                                if (!inTheBoard(p)||discsOnBoard[i][k]==null||getDiscAtPosition(p).getOwner()==currentPlayer||temp2.row()==i&&temp2.col()==k){
                                     continue;
-                                }else getDiscAtPosition(new Position(i, k)).setOwner(currentPlayer);
+                                }else getDiscAtPosition(p).setOwner(currentPlayer);
                             }
                         }
                     }
