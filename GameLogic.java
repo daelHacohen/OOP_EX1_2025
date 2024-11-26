@@ -218,6 +218,7 @@ return counter;
                     else if (Objects.equals(tempDisc.getType(), "⭕")){
                         continue;
                     } else if (Objects.equals(tempDisc.getType(), "💣")) {
+//                        flipBomb(temp);
                         tempDisc.setOwner(currentPlayer);
                         discsOnBoard[temp.row()][temp.col()] = tempDisc;
                         Position temp2=GoInDirection(temp, direction);
@@ -227,7 +228,7 @@ return counter;
                                 Position p =new Position(i,k);
                                 if (!inTheBoard(p)||discsOnBoard[i][k]==null||getDiscAtPosition(p).getOwner()==currentPlayer||temp2.row()==i&&temp2.col()==k){
                                     continue;
-                                }else getDiscAtPosition(p).setOwner(currentPlayer);
+                                }else if ()getDiscAtPosition(p).setOwner(currentPlayer);
                             }
                         }
                     }
@@ -239,6 +240,12 @@ return counter;
     }
     public void flipBomb(Position a){
         ArrayList<String>dirs =new ArrayList<>();
+        Player currentPlayer;
+        if (isFirstPlayerTurn) {
+            currentPlayer = player1;
+        } else {
+            currentPlayer = player2;
+        }
         dirs.add("upRight");
         dirs.add("up");
         dirs.add("upLeft");
@@ -250,7 +257,16 @@ return counter;
         Position temp =a;
         for (int i = 0; i < 8; i++) {
             temp = GoInDirection(temp,dirs.get(i));
-            if
+            if (inTheBoard(temp)&&getDiscAtPosition(temp)!=null){
+                if (getDiscAtPosition(temp).getOwner()!=currentPlayer){
+                    if (Objects.equals(getDiscAtPosition(temp).getType(), "⬤"))getDiscAtPosition(temp).setOwner(currentPlayer);
+                    else if (Objects.equals(getDiscAtPosition(temp).getType(), "⭕"))continue;
+                    else if (Objects.equals(getDiscAtPosition(temp).getType(), "💣")) {
+                        getDiscAtPosition(temp).setOwner(currentPlayer);
+//                        flipBomb(temp);
+                    }
+                }
+            }
         }
 
     }
