@@ -237,6 +237,23 @@ return counter;
             }
         }
     }
+    public void flipBomb(Position a){
+        ArrayList<String>dirs =new ArrayList<>();
+        dirs.add("upRight");
+        dirs.add("up");
+        dirs.add("upLeft");
+        dirs.add("left");
+        dirs.add("downLeft");
+        dirs.add("down");
+        dirs.add("downRight");
+        dirs.add("right");
+        Position temp =a;
+        for (int i = 0; i < 8; i++) {
+            temp = GoInDirection(temp,dirs.get(i));
+            if
+        }
+
+    }
 
 
 
