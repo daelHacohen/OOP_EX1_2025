@@ -213,7 +213,7 @@ return counter;
     }
 
 
-
+ //this fa
     public ArrayList<String> onlyGoodDirection(Position a) {
         ArrayList<String> newDirections = new ArrayList<>();
         ArrayList<String> directions = getDirections(a);
