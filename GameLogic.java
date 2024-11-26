@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class GameLogic implements PlayableLogic{
     private final Disc[][] discsOnBoard = new Disc[8][8];
@@ -154,14 +152,67 @@ public boolean isvalidMove(Position position){
                 break;
             }
             if (tempDisc.getOwner() != (isFirstPlayerTurn ? player1 : player2)){
-            counter++;
+                if (Objects.equals(tempDisc.getType(), "⬤")) {counter++;
+                }
+                else if (Objects.equals(tempDisc.getType(), "💣")){
+                    counter++;
+//                    int dael =countFlipBomb(temp);
+//                    counter= counter+dael;
+                } else if (Objects.equals(tempDisc.getType(), "⭕")) {
+                    continue;
+                }
+
+
             }
 
         }
     }
 return counter;
-
 }
+
+    public int countFlipBomb(Position a) {
+        int counter =0;
+        Player currentPlayer = isFirstPlayerTurn ? player1 : player2;
+
+        ArrayList<String> dirs = new ArrayList<>();
+        dirs.add("upRight");
+        dirs.add("up");
+        dirs.add("upLeft");
+        dirs.add("left");
+        dirs.add("downLeft");
+        dirs.add("down");
+        dirs.add("downRight");
+        dirs.add("right");
+
+        Set<Position> visited = new HashSet<>();
+        visited.add(a);
+        for (String direction : dirs) {
+            Position temp = a;
+            for (int j = 0; j < 1; j++) {
+                temp = GoInDirection(temp, direction);
+
+                if (!inTheBoard(temp)) break;
+                Disc tempDisc = discsOnBoard[temp.row()][temp.col()];
+                if (tempDisc == null) continue;
+
+                if (tempDisc.getOwner() != currentPlayer) {
+                    if (Objects.equals(tempDisc.getType(), "⬤")) {
+                        counter++;
+                    }
+                    else if (Objects.equals(tempDisc.getType(), "💣")) {
+                        if (!visited.contains(temp)) {
+                            visited.add(temp);
+                        counter++;
+                        counter+=countFlipBomb(temp);
+                     }
+                    }
+                }
+            }
+        }
+        return counter;
+    }
+
+
 
     public ArrayList<String> onlyGoodDirection(Position a) {
         ArrayList<String> newDirections = new ArrayList<>();
