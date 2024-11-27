@@ -2,6 +2,8 @@ import java.util.*;
 
 public class GameLogic implements PlayableLogic{
     private final Disc[][] discsOnBoard = new Disc[8][8];
+    private final Disc[][] CopyDiscsOnBoard = new Disc[8][8];
+   private ArrayList<Position>haya =new ArrayList<>();
 
    private Player player1;
     private Player player2;
@@ -133,45 +135,79 @@ public boolean isvalidMove(Position position){
         return possiblePositions;
     }
 
-    @Override
-    public int countFlips(Position a){
-        int counter =0;
-    ArrayList<String> dir =onlyGoodDirection(a);
-    for (String direction : dir) {
-        Position temp = a;
+
+
+@Override
+    public int countFlips(Position a) {
+        Player currentPlayer = isFirstPlayerTurn ? player1 : player2;
+    int copyCounter =0;
+    int boardCounter =0;
+
+    for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
-            temp = GoInDirection(temp, direction);
-            if (!inTheBoard(temp)) {
-                break;
-            }
-            Disc tempDisc = discsOnBoard[temp.row()][temp.col()];
-            if (tempDisc == null) {
-                break;
-            }
-            if (tempDisc.getOwner() == (isFirstPlayerTurn ? player1 : player2)){
-                break;
-            }
-            if (tempDisc.getOwner() != (isFirstPlayerTurn ? player1 : player2)){
-                if (Objects.equals(tempDisc.getType(), "⬤")) {counter++;
+            if (discsOnBoard[i][j] != null) {
+                if (Objects.equals(discsOnBoard[i][j].getType(), "⬤")){
+                CopyDiscsOnBoard[i][j] = new SimpleDisc(discsOnBoard[i][j].getOwner());
                 }
-                else if (Objects.equals(tempDisc.getType(), "💣")){
-                    counter++;
-//                    int dael =countFlipBomb(temp);
-//                    counter= counter+dael;
-                } else if (Objects.equals(tempDisc.getType(), "⭕")) {
-                    continue;
+                else if (Objects.equals(discsOnBoard[i][j].getType(), "💣")){
+                    CopyDiscsOnBoard[i][j] = new BombDisc(discsOnBoard[i][j].getOwner());
                 }
-
-
+                else if (Objects.equals(discsOnBoard[i][j].getType(), "⭕")){
+                    CopyDiscsOnBoard[i][j] = new UnflippableDisc(discsOnBoard[i][j].getOwner());
+                }
+            } else {
+                CopyDiscsOnBoard[i][j] = null;
             }
-
         }
     }
-return counter;
-}
 
-    public int countFlipBomb(Position a) {
-        int counter =0;
+        ArrayList<String> dir = onlyGoodDirection(a);
+
+        for (String direction : dir) {
+            Position temp = a;
+            for (int j = 0; j < 8; j++) {
+                temp = GoInDirection(temp, direction);
+                if (!inTheBoard(temp)) break;
+
+                Disc tempDisc = CopyDiscsOnBoard[temp.row()][temp.col()];
+                if (tempDisc == null) break;
+                if (tempDisc.getOwner() == currentPlayer) break;
+                if (Objects.equals(tempDisc.getType(), "⬤")) {
+                    tempDisc.setOwner(currentPlayer);
+                    CopyDiscsOnBoard[temp.row()][temp.col()] = tempDisc;
+                }
+                else if (Objects.equals(tempDisc.getType(), "💣")) {
+                    tempDisc.setOwner(currentPlayer);
+                    CopyDiscsOnBoard[temp.row()][temp.col()] = tempDisc;
+                    countFlipBomb(temp);
+                    temp =GoInDirection(temp,direction);
+                    temp= GoInDirection(temp,direction);
+                }
+                else if (Objects.equals(tempDisc.getType(), "⭕")) {
+                    continue;
+                }
+            }
+        }
+
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            if (CopyDiscsOnBoard[i][j]!=null&&inTheBoard(new Position(i,j))&&getDiscAtPositionInCopy(new Position(i,j)).getOwner()==currentPlayer){
+                copyCounter++;
+            }
+            if (discsOnBoard[i][j]!=null&&inTheBoard(new Position(i,j))&&getDiscAtPosition(new Position(i,j)).getOwner()==currentPlayer){
+                boardCounter++;
+            }
+
+         }
+        }
+    return copyCounter-boardCounter;
+
+    }
+    public Disc getDiscAtPositionInCopy(Position p){
+        return CopyDiscsOnBoard[p.row()][p.col()];
+    }
+
+    public void countFlipBomb(Position a) {
         Player currentPlayer = isFirstPlayerTurn ? player1 : player2;
 
         ArrayList<String> dirs = new ArrayList<>();
@@ -184,36 +220,33 @@ return counter;
         dirs.add("downRight");
         dirs.add("right");
 
-        Set<Position> visited = new HashSet<>();
-        visited.add(a);
         for (String direction : dirs) {
             Position temp = a;
             for (int j = 0; j < 1; j++) {
                 temp = GoInDirection(temp, direction);
 
                 if (!inTheBoard(temp)) break;
-                Disc tempDisc = discsOnBoard[temp.row()][temp.col()];
+                Disc tempDisc = CopyDiscsOnBoard[temp.row()][temp.col()];
                 if (tempDisc == null) continue;
 
                 if (tempDisc.getOwner() != currentPlayer) {
                     if (Objects.equals(tempDisc.getType(), "⬤")) {
-                        counter++;
+                        tempDisc.setOwner(currentPlayer);
+                        CopyDiscsOnBoard[temp.row()][temp.col()] = tempDisc;
                     }
                     else if (Objects.equals(tempDisc.getType(), "💣")) {
-                        if (!visited.contains(temp)) {
-                            visited.add(temp);
-                        counter++;
-                        counter+=countFlipBomb(temp);
-                     }
+                        tempDisc.setOwner(currentPlayer);
+                        CopyDiscsOnBoard[temp.row()][temp.col()] = tempDisc;
+                        countFlipBomb(temp);
                     }
                 }
             }
         }
-        return counter;
     }
 
 
- //this fa
+
+
     public ArrayList<String> onlyGoodDirection(Position a) {
         ArrayList<String> newDirections = new ArrayList<>();
         ArrayList<String> directions = getDirections(a);
@@ -260,6 +293,8 @@ return counter;
                     tempDisc.setOwner(currentPlayer);
                     discsOnBoard[temp.row()][temp.col()] = tempDisc;
                     flipBomb(temp);
+                    temp =GoInDirection(temp,direction);
+                    temp= GoInDirection(temp,direction);
                 }
                 else if (Objects.equals(tempDisc.getType(), "⭕")) {
                     continue;
