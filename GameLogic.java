@@ -521,26 +521,27 @@ previousMoves.push(firstMove);
 // (כנראה זה קשור לarrayList של הדיסקים והפוזישנים שאני שם בפונקציה flip
     @Override
     public void undoLastMove() {
+        System.out.println("Undoing last move :");
         if (previousMoves.size()>1) {
-            System.out.println("Undoing last move :");
+
             Move lastMove = previousMoves.pop();
             Disc[][] dael = previousMoves.peek().getBoard();
-            System.out.println("Undo: removing "+lastMove.disc.getType()+" from ("+lastMove.position.row()+", "+lastMove.position.col()+")");
+            System.out.println("\tUndo: removing "+lastMove.disc.getType()+" from ("+lastMove.position.row()+", "+lastMove.position.col()+")");
 
             for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
                     if (dael[i][j] != null) {
                         if (Objects.equals(dael[i][j].getType(), "⬤")) {
                             if (getDiscAtPosition(new Position(i,j)).getOwner()!=dael[i][j].getOwner()){
-                            System.out.println("flipping back ⬤ in ("+i+" ,"+j+")");}
+                            System.out.println("\tUndo: flipping back ⬤ in ("+i+" ,"+j+")");}
                             discsOnBoard[i][j] = new SimpleDisc(dael[i][j].getOwner());
                         } else if (Objects.equals(dael[i][j].getType(), "💣")) {
                             if (getDiscAtPosition(new Position(i,j)).getOwner()!=dael[i][j].getOwner()){
-                            System.out.println("flipping back 💣 in ("+i+" ,"+j+")");}
+                            System.out.println("\tUndo: flipping back 💣 in ("+i+" ,"+j+")");}
                             discsOnBoard[i][j] = new BombDisc(dael[i][j].getOwner());
                         } else if (Objects.equals(dael[i][j].getType(), "⭕")) {
                             if (getDiscAtPosition(new Position(i,j)).getOwner()!=dael[i][j].getOwner()){
-                            System.out.println("flipping back ⭕ in ("+i+" ,"+j+")");}
+                            System.out.println("\tUndo: flipping back ⭕ in ("+i+" ,"+j+")");}
                             discsOnBoard[i][j] = new UnflippableDisc(dael[i][j].getOwner());
                         }
                     } else {
@@ -566,6 +567,9 @@ if (lastMove!=null) {
 }
 
             System.out.println();
-        }else System.out.println("No previous move available to undo");
+        }else {
+            System.out.println("\tNo previous move available to undo");
+            System.out.println();
+        }
     }
 }
