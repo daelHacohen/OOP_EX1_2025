@@ -1,15 +1,23 @@
 public class Move {//צריך לממש את הפונקציות כאן ( עוד לא ממומש)
-    Position p;
+    Position position;
     Disc disc;
+    Disc[][] board = new Disc[8][8];
 
-    public Move(Position p, Disc disc) {
-        this.p = p;
+    public Move(Position p, Disc disc, Disc[][] board) {
+        this.position = p;
         this.disc = disc;
+        this.board = board;
     }
 
-    public Position position() { return p; }
+
+    public Position position() { return position; }
 
     public Disc disc() { return disc; }
-   public void Undo(){  }
+
+    public Disc[][] getBoard() {
+        return board;
+    }
+
+    public void Undo(){  }
 
 }
